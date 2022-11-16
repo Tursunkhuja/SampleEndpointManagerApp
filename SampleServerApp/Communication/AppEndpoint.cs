@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Reflection;
 
 
@@ -26,25 +23,36 @@ namespace SampleServerApp.Communication
         public PathString Path { get; }
         public Action<IApplicationBuilder> Map { get; }
 
-        internal Assembly ExternalAssembly { get; set; }
+        public Assembly ExternalAssembly { get; set; }
 
         public PathString GetPath(PathString pathBase) => AbsolutePath ? Path : pathBase + Path;
     }
 
     public class EagleHost
     {
-        public static void Configure(IWebHostBuilder webBuilder, string baseUrls, AppEndpoint endpoint)
+        public static void Configure(IWebHostBuilder webBuilder, string path, string baseUrls, List<AppEndpoint> endpoints)
         {
-
-            webBuilder.ConfigureServices(services =>
+            foreach (var endpoint in endpoints)
             {
-                if (endpoint.ExternalAssembly != null)
-                    services.AddControllers().AddApplicationPart(endpoint.ExternalAssembly);
+                webBuilder.ConfigureServices(services =>
+                {
+                    if (endpoint.ExternalAssembly != null)
+                        services.AddControllers().AddApplicationPart(endpoint.ExternalAssembly);
 
-                endpoint.ConfigureServices(services);
+                    endpoint.ConfigureServices(services);
+                });
+            }
+
+            webBuilder.Configure(app =>
+            {
+                foreach (var endpoint in endpoints)
+                {
+                    app.Map(endpoint.GetPath(path), endpoint.Map);
+                }
             });
 
-            webBuilder.UseUrls(baseUrls);
+
+            webBuilder.UseUrls(new[] { baseUrls });
         }
     }
 }

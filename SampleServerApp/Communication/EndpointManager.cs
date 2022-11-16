@@ -12,42 +12,39 @@ namespace SampleServerApp.Communication
     public class EndpointManager
     {
         public IDisposable ApiHost { get; private set; }
+        Dictionary<string, AppEndpoint> AppEndpoints { get; } = new();
+
         public void OpenCommunications(bool startupMode, int retryAttempts = 3)
-        {            
-            ApiHost = StartApiHost(AppEndpoint);
+        {
+            ApiHost = StartApiHost(AppEndpoints.Values.ToList());
         }
 
         #region Endpoints
-        AppEndpoint AppEndpoint { get; set; } 
 
-        void AddAppEndpoint(AppEndpoint endpoint, Assembly assembly = null)
+        public void AddAppEndpoint(AppEndpoint endpoint, Assembly assembly)
         {
             endpoint.ExternalAssembly = assembly;
-            AppEndpoint = endpoint;
+            AppEndpoints.TryAdd(endpoint.Path, endpoint);
         }
 
         #endregion
 
-        IDisposable StartApiHost(AppEndpoint appEndpoint)
+        IDisposable StartApiHost(List<AppEndpoint> appEndpoints)
         {
             var urls = "http://localhost:49152";
-            
+
             try
             {
-
-                var host = Host.CreateDefaultBuilder()
-                    .ConfigureWebHostDefaults(webBuilder => EagleHost.Configure(webBuilder, urls, appEndpoint))
-                    .Build();
-
+                var host = Host.CreateDefaultBuilder().ConfigureWebHostDefaults(w => EagleHost.Configure(w, "", urls, appEndpoints)).Build();                
                 try
                 {
                     if (ApiHost != null)
                     {
                         // If the host was already started in startup mode, close it before starting the regular host.
                         ApiHost.Dispose();
-                        ApiHost = null;
+                        ///ApiHost = null;
                     }
-                    host.Start();                    
+                    host.Run();
                     return host;
                 }
                 catch
@@ -58,7 +55,7 @@ namespace SampleServerApp.Communication
             }
             catch
             {
-               
+                throw;
             }
         }
     }
