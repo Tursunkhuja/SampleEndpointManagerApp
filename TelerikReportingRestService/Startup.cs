@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Net;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
 using Telerik.WebReportDesigner.Services;
@@ -9,14 +10,14 @@ namespace TelerikReportingRestService
     {
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddMvc().AddNewtonsoftJson();
 
             var reportsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
 
             // CORS policy that will allow any origin. We use this for the ReportsController (might not be appropriate for other controllers)
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyHeader());
             });
 
             // Configure dependencies for ReportsController.
@@ -32,23 +33,28 @@ namespace TelerikReportingRestService
             #region Web Designer Services
             services.TryAddSingleton<IReportDesignerServiceConfiguration>(sp => new ReportDesignerServiceConfiguration
             {
-                DefinitionStorage = new FileDefinitionStorage(reportsPath),
+                //DefinitionStorage = new FileDefinitionStorage(reportsPath),
+                //ResourceStorage = new ResourceStorage(Path.Combine(reportsPath, "Resources")),
+                //SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Telerik Reporting"))
+
+                SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Telerik Reporting")),
+                DefinitionStorage = new FileDefinitionStorage(reportsPath, new[] { "Resources" }),
                 ResourceStorage = new ResourceStorage(Path.Combine(reportsPath, "Resources")),
-                SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Telerik Reporting"))
+
             });
             #endregion
         }
 
         public static void Configure(IApplicationBuilder app)
         {
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseStaticFiles();
-            app
-                .UseRouting()
-                .UseCors("AllowOrigin")
-                .UseEndpoints(config =>
-                {
-                    config.MapControllers();
-                });
+            app.UseRouting();
+            app.UseEndpoints(config =>
+            {
+                config.MapControllers();
+            });
         }
     }
 }
