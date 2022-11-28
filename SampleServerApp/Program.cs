@@ -2,10 +2,15 @@
 using Microsoft.Extensions.Hosting;
 using TelerikReportingRestService;
 using TelerikReportingRestService.Controllers;
+using TestWebApplication;
 
 Console.WriteLine("Hello, World!");
 
 var endpointManager = new EndpointManager();
-var endpoint = new AppEndpoint(Startup.ConfigureServices, Startup.Configure, "");
-endpointManager.AddAppEndpoint(endpoint, typeof(ReportsController).Assembly);
+var endpointTelerikReporting = new AppEndpoint(TelerikReportingRestService.Startup.ConfigureServices, TelerikReportingRestService.Startup.Configure, "");
+endpointManager.AddAppEndpoint(endpointTelerikReporting, typeof(ReportsController).Assembly);
+
+var endpointTest = new AppEndpoint(TestWebApplication.Startup.ConfigureServices, TestWebApplication.Startup.Configure, "/test");
+endpointManager.AddAppEndpoint(endpointTest, typeof(TestWebApplication.Controllers.WeatherForecastController).Assembly);
+
 endpointManager.OpenCommunications(false);
