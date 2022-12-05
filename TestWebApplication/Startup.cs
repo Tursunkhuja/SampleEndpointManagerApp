@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 
 namespace TestWebApplication
 {
@@ -17,6 +20,13 @@ namespace TestWebApplication
             //    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyHeader());
             //});
 
+            // requires using Microsoft.AspNet.OData.Extensions;
+            services.AddOData();
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            });
+
         }
 
         public static void Configure(IApplicationBuilder app)
@@ -28,6 +38,12 @@ namespace TestWebApplication
             app.UseEndpoints(config =>
             {
                 config.MapControllers();
+            });
+
+            app.UseMvc(routeBuilder =>
+            {
+                routeBuilder.EnableDependencyInjection();
+                routeBuilder.Select().OrderBy().Filter();
             });
         }
     }
