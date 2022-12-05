@@ -33,10 +33,6 @@ namespace TelerikReportingRestService
             #region Web Designer Services
             services.TryAddSingleton<IReportDesignerServiceConfiguration>(sp => new ReportDesignerServiceConfiguration
             {
-                //DefinitionStorage = new FileDefinitionStorage(reportsPath),
-                //ResourceStorage = new ResourceStorage(Path.Combine(reportsPath, "Resources")),
-                //SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Telerik Reporting"))
-
                 SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Telerik Reporting")),
                 DefinitionStorage = new FileDefinitionStorage(reportsPath, new[] { "Resources" }),
                 ResourceStorage = new ResourceStorage(Path.Combine(reportsPath, "Resources")),

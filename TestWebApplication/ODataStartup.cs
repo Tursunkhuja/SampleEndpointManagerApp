@@ -1,32 +1,18 @@
-﻿
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNet.OData.Extensions;
+using Newtonsoft.Json.Serialization;
 
 namespace TestWebApplication
 {
-    public class Startup
+    public class ODataStartup
     {
         public static void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            //services.AddEndpointsApiExplorer();
-            //services.AddSwaggerGen();
-
-            // CORS policy that will allow any origin. We use this for the ReportsController (might not be appropriate for other controllers)
-            //services.AddCors(c =>
-            //{
-            //    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyHeader());
-            //});
-
-            // requires using Microsoft.AspNet.OData.Extensions;
             services.AddOData();
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
-            });
-
+            }).AddNewtonsoftJson(op => op.SerializerSettings.ContractResolver = new DefaultContractResolver());
         }
 
         public static void Configure(IApplicationBuilder app)

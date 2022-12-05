@@ -10,7 +10,7 @@ var endpointManager = new EndpointManager();
 var endpointTelerikReporting = new AppEndpoint(TelerikReportingRestService.Startup.ConfigureServices, TelerikReportingRestService.Startup.Configure, "");
 endpointManager.AddAppEndpoint(endpointTelerikReporting, typeof(ReportsController).Assembly);
 
-var endpointTest = new AppEndpoint(TestWebApplication.Startup.ConfigureServices, TestWebApplication.Startup.Configure, "/test");
+var endpointTest = new AppEndpoint(TestWebApplication.ODataStartup.ConfigureServices, TestWebApplication.ODataStartup.Configure, path: "/test");
 endpointManager.AddAppEndpoint(endpointTest, typeof(TestWebApplication.Controllers.WeatherForecastController).Assembly);
 
 endpointManager.OpenCommunications(false);
