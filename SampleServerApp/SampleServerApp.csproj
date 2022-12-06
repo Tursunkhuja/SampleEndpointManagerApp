@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TelerikReportingRestService\TelerikReportingRestService.csproj" />
-    <ProjectReference Include="..\TestWebApplication\TestODataService.csproj" />
+    <ProjectReference Include="..\TestODataService\TestODataService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
