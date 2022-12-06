@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelerikReportingRestService
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleServerApp", "SampleServerApp\SampleServerApp.csproj", "{B0FB5409-1E13-406E-83E5-0BAFFA0722CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebApplication", "TestWebApplication\TestWebApplication.csproj", "{B214E505-C362-4156-B950-C66448007306}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestODataService", "TestWebApplication\TestODataService.csproj", "{B214E505-C362-4156-B950-C66448007306}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

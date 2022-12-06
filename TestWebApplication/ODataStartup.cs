@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.OData.Extensions;
 using Newtonsoft.Json.Serialization;
 
-namespace TestWebApplication
+namespace ODataService
 {
     public class ODataStartup
     {

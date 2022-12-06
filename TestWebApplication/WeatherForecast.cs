@@ -1,4 +1,4 @@
-namespace TestWebApplication
+namespace ODataService
 {
     public class WeatherForecast
     {
