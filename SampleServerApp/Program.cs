@@ -1,16 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Microsoft.Extensions.Hosting;
-using TelerikReportingRestService;
+using SampleServerApp.Communication;
 using TelerikReportingRestService.Controllers;
-using TestWebApplication;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Starting Reporting and OData endpoints!");
 
 var endpointManager = new EndpointManager();
-var endpointTelerikReporting = new AppEndpoint(TelerikReportingRestService.Startup.ConfigureServices, TelerikReportingRestService.Startup.Configure, "");
+var endpointTelerikReporting = new AppEndpoint(TelerikReportingRestService.Startup.ConfigureServices, TelerikReportingRestService.Startup.Configure,  "/Reporting");
 endpointManager.AddAppEndpoint(endpointTelerikReporting, typeof(ReportsController).Assembly);
 
-var endpointTest = new AppEndpoint(TestWebApplication.ODataStartup.ConfigureServices, TestWebApplication.ODataStartup.Configure, path: "/test");
+var endpointTest = new AppEndpoint(TestWebApplication.ODataStartup.ConfigureServices, TestWebApplication.ODataStartup.Configure, path: "/OData");
 endpointManager.AddAppEndpoint(endpointTest, typeof(TestWebApplication.Controllers.WeatherForecastController).Assembly);
 
 endpointManager.OpenCommunications(false);

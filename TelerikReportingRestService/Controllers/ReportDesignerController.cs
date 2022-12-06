@@ -6,8 +6,8 @@ using Telerik.WebReportDesigner.Services.Controllers;
 
 namespace TelerikReportingRestService.Controllers
 {
-    [ApiController]
     [Route("api/reportdesigner")]
+    [ApiController]
     //[EnableCors("AllowOrigin")]
     public class ReportDesignerController : ReportDesignerControllerBase
     {
