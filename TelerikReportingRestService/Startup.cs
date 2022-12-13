@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Net;
+using Newtonsoft.Json.Serialization;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
 using Telerik.WebReportDesigner.Services;
@@ -10,7 +10,10 @@ namespace TelerikReportingRestService
     {
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddNewtonsoftJson();
+            services.AddMvc().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
 
             var reportsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
 
